@@ -245,6 +245,7 @@ namespace verona::compiler
         return 1;
       }
 
+      std::cout << "Writing byte code out" << std::endl;
       output.write(
         reinterpret_cast<const char*>(bytecode.data()), bytecode.size());
     }
