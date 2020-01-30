@@ -32,5 +32,7 @@ void enable_colour_console()
   SetConsoleMode(hOut, dwMode);
   atexit(restore_console);
   // TODO something for Ctrl-C and abort like exits.
+
+  SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
 #endif
 }
