@@ -211,7 +211,6 @@ namespace verona::compiler
     enable_colour_console();
     setup();
 
-    assert(false);
     Options options;
 
     CLI::App app{"Verona compiler"};
