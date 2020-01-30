@@ -116,6 +116,30 @@ jobs:
     failOnStderr: true
     displayName: Language test suite
 
+  - script: |
+      ctest -j 4 --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
+    workingDirectory: build/testsuite
+    failOnStderr: true
+    displayName: Language test suite
+
+  - script: |
+      ctest -j 4 --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
+    workingDirectory: build/testsuite
+    failOnStderr: true
+    displayName: Language test suite
+
+  - script: |
+      ctest -j 4 --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
+    workingDirectory: build/testsuite
+    failOnStderr: true
+    displayName: Language test suite
+
+  - script: |
+      ctest -j 4 --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
+    workingDirectory: build/testsuite
+    failOnStderr: true
+    displayName: Language test suite
+
   - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
     displayName: 'Component Detection'
     inputs:
