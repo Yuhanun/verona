@@ -93,7 +93,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake .. -G"Visual Studio 15 2017 Win64" -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On'
     inputs:
-      cmakeArgs: '.. -G"Visual Studio 15 2017 Win64" -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On'
+      cmakeArgs: '.. -G"Visual Studio 15 2017 Win64" -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On'
 
   - script: |
       dir /s /b
@@ -104,11 +104,11 @@ jobs:
       solution: build/INSTALL.vcxproj
       msbuildArguments: '/m /p:Configuration=$(BuildType)'
 
-  - script: |
-      ctest -j 4 -E "([1-9][0-9]00|[4-9]00)" --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
-    workingDirectory: build/src/rt
-    failOnStderr: true
-    displayName: Runtime test suite
+  # - script: |
+  #     ctest -j 4 -E "([1-9][0-9]00|[4-9]00)" --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
+  #   workingDirectory: build/src/rt
+  #   failOnStderr: true
+  #   displayName: Runtime test suite
 
   - script: |
       ctest -j 4 --timeout 400 --output-on-failure --interactive-debug-mode 0 -C $(BuildType)
