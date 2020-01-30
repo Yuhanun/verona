@@ -2,75 +2,75 @@ resources:
 - repo: self
 
 jobs:
-- job: 
-  displayName: Linux
-  pool:
-    vmImage: 'ubuntu-16.04'
-  strategy:
-    matrix:
-      Clang-6 Debug:
-        CC: clang-6.0
-        CXX: clang++-6.0
-        CXXFLAGS: -stdlib=libstdc++
-        BuildType: Debug
-        Asan: Off
-      Clang-6 Release:
-        CC: clang-6.0
-        CXX: clang++-6.0
-        CXXFLAGS: -stdlib=libstdc++
-        Asan: Off
-        BuildType: Release
-      Clang-6 Debug (ASAN):
-        CC: clang-6.0
-        CXX: clang++-6.0
-        CXXFLAGS: -stdlib=libstdc++
-        BuildType: Debug
-        Asan: On
-      Clang-6 Release (ASAN):
-        CC: clang-6.0
-        CXX: clang++-6.0
-        CXXFLAGS: -stdlib=libstdc++
-        BuildType: Release
-        Asan: On
-  steps:
-  - checkout: self
-    submodules: recursive
+# - job: 
+#   displayName: Linux
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   strategy:
+#     matrix:
+#       Clang-6 Debug:
+#         CC: clang-6.0
+#         CXX: clang++-6.0
+#         CXXFLAGS: -stdlib=libstdc++
+#         BuildType: Debug
+#         Asan: Off
+#       Clang-6 Release:
+#         CC: clang-6.0
+#         CXX: clang++-6.0
+#         CXXFLAGS: -stdlib=libstdc++
+#         Asan: Off
+#         BuildType: Release
+#       Clang-6 Debug (ASAN):
+#         CC: clang-6.0
+#         CXX: clang++-6.0
+#         CXXFLAGS: -stdlib=libstdc++
+#         BuildType: Debug
+#         Asan: On
+#       Clang-6 Release (ASAN):
+#         CC: clang-6.0
+#         CXX: clang++-6.0
+#         CXXFLAGS: -stdlib=libstdc++
+#         BuildType: Release
+#         Asan: On
+#   steps:
+#   - checkout: self
+#     submodules: recursive
 
-  - script: |
-      sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-      sudo apt-get update
-      sudo apt-get install -y ninja-build libstdc++-7-dev clang-6.0
+#   - script: |
+#       sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+#       sudo apt-get update
+#       sudo apt-get install -y ninja-build libstdc++-7-dev clang-6.0
 
-      sudo pip install wheel OutputCheck
-    displayName: 'Install Build Dependencies'
+#       sudo pip install wheel OutputCheck
+#     displayName: 'Install Build Dependencies'
 
-  - task: CMake@1
-    displayName: 'CMake .. -GNinja -DCMAKE_BUILD_TYPE=$(BuildType) -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS=$(CXXFLAGS) -DUSE_ASAN=$(Asan) -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On'
-    inputs:
-      cmakeArgs: |
-        .. -GNinja -DCMAKE_BUILD_TYPE=$(BuildType) -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS=$(CXXFLAGS) -DUSE_ASAN=$(Asan) -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On
+#   - task: CMake@1
+#     displayName: 'CMake .. -GNinja -DCMAKE_BUILD_TYPE=$(BuildType) -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS=$(CXXFLAGS) -DUSE_ASAN=$(Asan) -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On'
+#     inputs:
+#       cmakeArgs: |
+#         .. -GNinja -DCMAKE_BUILD_TYPE=$(BuildType) -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS=$(CXXFLAGS) -DUSE_ASAN=$(Asan) -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On
 
-  - script: |
-      ninja -j4 install
-    workingDirectory: build
-    failOnStderr: true
-    displayName: 'Compile'
+#   - script: |
+#       ninja -j4 install
+#     workingDirectory: build
+#     failOnStderr: true
+#     displayName: 'Compile'
 
-  - script: |
-      export ASAN_SYMBOLIZER_PATH=/usr/lib/llvm-6.0/bin/llvm-symbolizer
-      export ASAN_OPTIONS="alloc_dealloc_mismatch=0 symbolize=1"
-      ctest -j 4 -E "([1-9][0-9]00|[4-9]00)" --timeout 400 --output-on-failure
-    workingDirectory: build/src/rt
-    failOnStderr: true
-    displayName: Runtime test suite
+#   - script: |
+#       export ASAN_SYMBOLIZER_PATH=/usr/lib/llvm-6.0/bin/llvm-symbolizer
+#       export ASAN_OPTIONS="alloc_dealloc_mismatch=0 symbolize=1"
+#       ctest -j 4 -E "([1-9][0-9]00|[4-9]00)" --timeout 400 --output-on-failure
+#     workingDirectory: build/src/rt
+#     failOnStderr: true
+#     displayName: Runtime test suite
 
-  - script: |
-      export ASAN_SYMBOLIZER_PATH=/usr/lib/llvm-6.0/bin/llvm-symbolizer
-      export ASAN_OPTIONS="alloc_dealloc_mismatch=0 symbolize=1"
-      ctest -j 4 --timeout 400 --output-on-failure
-    workingDirectory: build/testsuite
-    failOnStderr: true
-    displayName: Language test suite
+#   - script: |
+#       export ASAN_SYMBOLIZER_PATH=/usr/lib/llvm-6.0/bin/llvm-symbolizer
+#       export ASAN_OPTIONS="alloc_dealloc_mismatch=0 symbolize=1"
+#       ctest -j 4 --timeout 400 --output-on-failure
+#     workingDirectory: build/testsuite
+#     failOnStderr: true
+#     displayName: Language test suite
 
 - job: 
   displayName: Windows
@@ -80,8 +80,8 @@ jobs:
     matrix:
       Debug:
         BuildType: Debug
-      Release:
-        BuildType: Release
+      # Release:
+      #   BuildType: Release
 
   steps:
   - checkout: self
@@ -121,79 +121,79 @@ jobs:
     inputs:
       failOnAlert: true
 
-- job: 
-  displayName: macOS
-  pool:
-    vmImage: 'macOS-10.14'
-  strategy:
-    matrix:
-      Debug:
-        BuildType: Debug
-      Release:
-        BuildType: Release
+# - job: 
+#   displayName: macOS
+#   pool:
+#     vmImage: 'macOS-10.14'
+#   strategy:
+#     matrix:
+#       Debug:
+#         BuildType: Debug
+#       Release:
+#         BuildType: Release
 
-  steps:
-  - checkout: self
-    submodules: recursive
+#   steps:
+#   - checkout: self
+#     submodules: recursive
 
-  - script: |
-      sudo pip install wheel OutputCheck
-    displayName:  Dependencies
+#   - script: |
+#       sudo pip install wheel OutputCheck
+#     displayName:  Dependencies
 
-  - task: CMake@1
-    displayName: 'CMake .. -DCMAKE_BUILD_TYPE=$(BuildType) -DVERONA_CI_BUILD=On -DRT_TESTS=On'
-    inputs:
-      cmakeArgs: '.. -DCMAKE_BUILD_TYPE=$(BuildType) -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On'
+#   - task: CMake@1
+#     displayName: 'CMake .. -DCMAKE_BUILD_TYPE=$(BuildType) -DVERONA_CI_BUILD=On -DRT_TESTS=On'
+#     inputs:
+#       cmakeArgs: '.. -DCMAKE_BUILD_TYPE=$(BuildType) -DVERONA_CI_BUILD=On -DSNMALLOC_CI_BUILD=On -DRT_TESTS=On'
 
-  - script: |
-      make -j 4 install
+#   - script: |
+#       make -j 4 install
 
-    workingDirectory: build
-    failOnStderr: true
-    displayName: 'Compile'
+#     workingDirectory: build
+#     failOnStderr: true
+#     displayName: 'Compile'
 
-  - script: |
-      ctest -j 4 -E "([1-9][0-9]00|[4-9]00)" --timeout 400 --output-on-failure
-    workingDirectory: build/src/rt
-    failOnStderr: true
-    displayName: Runtime test suite
+#   - script: |
+#       ctest -j 4 -E "([1-9][0-9]00|[4-9]00)" --timeout 400 --output-on-failure
+#     workingDirectory: build/src/rt
+#     failOnStderr: true
+#     displayName: Runtime test suite
 
-  - script: |
-      ctest -j 4 --timeout 400 --output-on-failure
-    workingDirectory: build/testsuite
-    failOnStderr: true
-    displayName: Language test suite
+#   - script: |
+#       ctest -j 4 --timeout 400 --output-on-failure
+#     workingDirectory: build/testsuite
+#     failOnStderr: true
+#     displayName: Language test suite
 
-- job: 
-  displayName: Format
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - checkout: self
-    submodules: recursive
+# - job: 
+#   displayName: Format
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   steps:
+#   - checkout: self
+#     submodules: recursive
 
-  - script: |
-      wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-      sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
-      sudo apt-get update
-      sudo apt-get install -y clang-format-6.0
-      sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-6.0 100
+#   - script: |
+#       wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+#       sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
+#       sudo apt-get update
+#       sudo apt-get install -y clang-format-6.0
+#       sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-6.0 100
 
-    displayName: 'Install Clang tools'
+#     displayName: 'Install Clang tools'
 
-  - task: CMake@1
-    displayName: 'CMake ..'
-    inputs:
-      cmakeArgs: '..'
+#   - task: CMake@1
+#     displayName: 'CMake ..'
+#     inputs:
+#       cmakeArgs: '..'
 
-  - script: |
-      make clangformat
-      git diff $(Build.SourceVersion)
-      if [ "$(git diff $(Build.SourceVersion))" != "" ]; then exit 1; fi
+#   - script: |
+#       make clangformat
+#       git diff $(Build.SourceVersion)
+#       if [ "$(git diff $(Build.SourceVersion))" != "" ]; then exit 1; fi
 
-    workingDirectory: build
-    displayName: 'Clang-Format'
+#     workingDirectory: build
+#     displayName: 'Clang-Format'
 
-  - script: |
-      grep -L "Copyright (c) Microsoft Corporation"  `git ls-files -- '*.cpp' '*.cc' '*.h' '*.hh' '*.verona'| xargs`
-    displayName: 'Check Copyright'
+#   - script: |
+#       grep -L "Copyright (c) Microsoft Corporation"  `git ls-files -- '*.cpp' '*.cc' '*.h' '*.hh' '*.verona'| xargs`
+#     displayName: 'Check Copyright'
