@@ -8,7 +8,7 @@ set(INTERPRETER_LOG ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME}.output)
 
 
 CheckStatus(
-  COMMAND ${VERONAC} ${VERONAC_FLAGS} ${TEST_FILE} --output=${BYTECODE_OUTPUT} --dump-path=non-existent
+  COMMAND ${VERONAC} ${VERONAC_FLAGS} ${TEST_FILE} --output=${BYTECODE_OUTPUT} --print=Main.main
   EXPECTED_STATUS 0)
 
 if(EXPECTED_DUMP)
