@@ -204,11 +204,14 @@ namespace verona::compiler
     return std::string(buf);
   }
 
+  int* p = nullptr;
+
   int main(int argc, const char** argv)
   {
     enable_colour_console();
     setup();
 
+    assert(false);
     Options options;
 
     CLI::App app{"Verona compiler"};
